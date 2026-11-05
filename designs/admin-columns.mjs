@@ -46,7 +46,7 @@ export const CATS = [
     ]],
     ['Target Adapter', 'Essential', 'columns.target.adapter', [
       ['chips5', 'List Table', 'Which WordPress list table this view drives.', ['Posts', 'Users', 'Media', 'Comments', 'Terms', 'Custom entities', 'WooCommerce', 'Third-party'], [0]],
-      ['notice', 'Adapter Status', 'Unsupported features are disabled per adapter.', ['Posts adapter: sorting, filters, inline and bulk editing available.']],
+      ['notice', 'Adapter Status', 'Unsupported features are disabled per adapter.', ['Posts: sort, filter, inline and bulk edit.']],
     ]],
   ]],
   ['Column definition', [
@@ -227,7 +227,7 @@ export const CATS = [
       ['notice', 'Query-backed Selection', 'Always on.', ['“All matching” re-runs the query; it never trusts a stale list.']],
       ['notice', 'Delete Impact Preview', 'Always on.', ['Shows counts and linked items before deleting.']],
     ]],
-    ['Accessibility & Authorization Guarantees', 'System', 'columns.safety.accessibility_authorization', [
+    ['Access & Authorization Guarantees', 'System', 'columns.safety.accessibility_authorization', [
       ['notice', 'Not Colour Only', 'Always on.', ['Conditional styles always add an icon or text, not colour alone.']],
       ['notice', 'Visibility Is Not Access', 'Always on.', ['Hidden columns stay protected by Roles & Policy.']],
     ]],
