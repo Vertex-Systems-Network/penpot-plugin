@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Penpot API spike</title>
+<title>Penpot Design Writer</title>
 <style>
 :root {
   --ink: #0b1a3d; --text-2: #33405c; --muted: #5d6780; --line: #dde4f0;
@@ -59,8 +59,8 @@ button.danger { background: var(--danger); color: #fff; }
 </head>
 <body>
 <main>
-  <h1>Penpot API spike</h1>
-  <p class="lead">Checks whether Penpot can be designed without an open browser tab. It adds one test page, “API spike 2”, to your file.</p>
+  <h1>Penpot Design Writer</h1>
+  <p class="lead">Writes a design file into your Penpot file as a new page. No Penpot tab needs to stay open.</p>
 
   <form class="panel" id="form">
     <h2>Connection</h2>
@@ -80,6 +80,11 @@ button.danger { background: var(--danger); color: #fff; }
       <div class="help">Your self-hosted Penpot. The public design.penpot.app blocks token access with Cloudflare.</div>
     </div>
     <div class="field">
+      <label for="design">Design file</label>
+      <input id="design" type="file" accept=".json,application/json" required>
+      <div class="help">A screen file Claude made, from the designs folder of this repo.</div>
+    </div>
+    <div class="field">
       <label for="at">When</label>
       <div class="when">
         <div class="choices"><label><input type="radio" name="mode" value="now" checked> Run now</label><label><input type="radio" name="mode" value="later"> Schedule for later</label></div>
@@ -88,7 +93,7 @@ button.danger { background: var(--danger); color: #fff; }
       <div class="help">A scheduled run only needs the black server window to stay open; you can close this page and reopen it later to check.</div>
     </div>
     <div class="actions">
-      <button id="run" type="submit">Run the test</button>
+      <button id="run" type="submit">Write to Penpot</button>
       <button id="pause" type="button" class="ghost hidden">Pause</button>
       <button id="resume" type="button" class="secondary hidden">Resume</button>
       <button id="reschedule" type="button" class="ghost hidden">Reschedule</button>
@@ -102,23 +107,6 @@ button.danger { background: var(--danger); color: #fff; }
     <div id="status" class="status hidden" role="status"></div>
   </form>
 
-  <section class="panel hidden" id="questions">
-    <h2>Look at the “API spike 2” page in Penpot</h2>
-    <fieldset>
-      <legend>Which texts are visible?</legend>
-      <div class="choices"><label><input type="radio" name="q1" value="both"> Both</label><label><input type="radio" name="q1" value="only Default font text"> Only “Default font text”</label><label><input type="radio" name="q1" value="only Text made by the API"> Only “Text made by the API”</label><label><input type="radio" name="q1" value="none"> None</label></div>
-    </fieldset>
-    <fieldset>
-      <legend>What is the order from top to bottom?</legend>
-      <div class="choices"><label><input type="radio" name="q2" value="texts first, then orange, then indigo"> Texts, orange, indigo</label><label><input type="radio" name="q2" value="indigo, orange, then texts"> Indigo, orange, texts</label><label><input type="radio" name="q2" value="something else"> Something else</label></div>
-    </fieldset>
-    <fieldset>
-      <legend>What size is the board?</legend>
-      <div class="choices"><label><input type="radio" name="q3" value="grew to fit"> Grew to fit</label><label><input type="radio" name="q3" value="stayed 120 tall"> Stayed 120 tall</label></div>
-    </fieldset>
-    <button id="copy" type="button" class="secondary">Copy result for Claude</button>
-    <div id="copied" class="status ok hidden" role="status">Copied. Paste it into the chat.</div>
-  </section>
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
@@ -140,10 +128,9 @@ function render(j) {
   show('resume', j.status === 'paused');
   show('reschedule', j.status === 'scheduled');
   show('cancel', active);
-  const msg = { done: ['ok', 'Page written. Answer the three questions below.'], failed: ['err', 'The test stopped. Copy the log above for Claude.'], cancelled: ['err', 'Cancelled. Nothing more will be written.'], paused: ['ok', 'Paused. Resume to continue from the next step.'] }[j.status];
+  const msg = { done: ['ok', 'Done. Open the new page in Penpot.'], failed: ['err', 'Stopped. Copy the log above for Claude.'], cancelled: ['err', 'Cancelled. Nothing more will be written.'], paused: ['ok', 'Paused. Resume to continue from the next step.'] }[j.status];
   $('status').className = msg ? 'status ' + msg[0] : 'status hidden';
   if (msg) $('status').textContent = msg[1];
-  show('questions', j.status === 'done');
   if (active && !polling) polling = setInterval(poll, 500);
   if (!active && polling) { clearInterval(polling); polling = null; }
 }
@@ -157,13 +144,12 @@ async function act(name, body) {
 }
 document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', () => show('at', r.value === 'later' && r.checked)));
 const atValue = () => { const v = $('at').value; return v ? new Date(v).toISOString() : null; };
-$('form').addEventListener('submit', (e) => {
+$('form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const f = $('design').files[0];
   const later = document.querySelector('input[name=mode]:checked').value === 'later';
   if (later && !atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick a date and time for the scheduled run.'; return; }
-  document.querySelectorAll('#questions input[type=radio]').forEach((r) => (r.checked = false));
-  show('copied', false);
-  act('run', { token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value, at: later ? atValue() : null });
+  act('run', { token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value, design: f ? await f.text() : '', at: later ? atValue() : null });
 });
 $('pause').addEventListener('click', () => act('pause'));
 $('resume').addEventListener('click', () => act('resume'));
@@ -172,18 +158,6 @@ $('reschedule').addEventListener('click', () => {
   show('at', true); document.querySelector('input[name=mode][value=later]').checked = true;
   if (!atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick the new date and time, then press Reschedule again.'; $('at').focus(); return; }
   act('reschedule', { at: atValue() });
-});
-$('copy').addEventListener('click', async () => {
-  const pick = (n) => (document.querySelector(`input[name=${n}]:checked`) || {}).value || 'not answered';
-  const text = `API spike result\n${output.trim()}\n\n1. Text visible: ${pick('q1')}\n2. Layout: ${pick('q2')}\n3. Board size: ${pick('q3')}`;
-  try {
-    await navigator.clipboard.writeText(text);
-    $('copied').textContent = 'Copied. Paste it into the chat.';
-  } catch {
-    prompt('Copy this text, then paste it into the chat:', text);
-    $('copied').textContent = 'Copy the text from the box that opened, then paste it into the chat.';
-  }
-  show('copied', true);
 });
 poll();
 </script>
