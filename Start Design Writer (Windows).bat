@@ -7,5 +7,5 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-node spike\ui\server.mjs
+node app\server.mjs
 pause

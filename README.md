@@ -1,8 +1,6 @@
 # penpot-plugin
 
-An MCP server that designs in Penpot through its backend API, so no Penpot browser tab has to stay open.
-
-Status: spike. The real server is built once the spike answers the questions below.
+Writes designs into Penpot through its backend API, so no Penpot browser tab has to stay open.
 
 ## Why
 
@@ -21,31 +19,19 @@ Needs [Docker Desktop](https://www.docker.com/products/docker-desktop/), running
 
 `Stop Penpot (Windows).bat` stops it; designs are kept for the next start. `self-host/docker-compose.yaml` is Penpot's official stack with `enable-access-tokens` added; the start script writes a private secret key to `self-host/.env` once.
 
-## 2. Run the spike
+## 2. Write a design
 
 Needs [Node.js](https://nodejs.org/en/download) 18 or newer.
 
-1. Double-click `Start Penpot spike (Windows).bat` (or `Start Penpot spike (Mac).command`). A form opens in your browser.
+1. Double-click `Start Design Writer (Windows).bat` (or `Start Design Writer (Mac).command`). A page opens in your browser.
 2. Paste the access token and the file id (from the file's address bar, after `file-id=`). The Penpot address is already `http://localhost:9001`.
-3. Choose **Run now** or **Schedule for later** and press **Run the test**. A progress bar shows each step and its percentage; **Pause**, **Resume**, **Cancel** and **Reschedule** appear while a run is active.
-4. Answer the three questions and press **Copy result for Claude**.
+3. Pick a design file from `designs/` (for example `01-overview.json`).
+4. Choose **Run now** or **Schedule for later** and press **Write to Penpot**. The progress bar shows the percentage and the layer being written; **Pause**, **Resume**, **Cancel** and **Reschedule** appear while a run is active.
 
-From a terminal instead: `PENPOT_TOKEN=<token> PENPOT_FILE_ID=<file id> node spike/check-api.mjs`.
+It adds the design as a new page. Penpot's editor lays out flex boards and measures text itself when the page opens (confirmed by `spike/check-api.mjs`), so the writer sends flex rules, not computed positions.
 
-It creates a page named "API spike" and checks:
+From a terminal (this is how Claude runs it on a linked computer): put the token in `.penpot-token` (never committed), then `node src/render.mjs designs/01-overview.json <file id>`.
 
-1. whether the token API accepts the calls;
-2. whether API-created text renders;
-3. whether the editor applies flex layout to an API-created board.
+## Design files
 
-Delete the "API spike" page afterwards.
-
-## Plan
-
-Based on [zcube/penpot-mcp-server](https://github.com/zcube/penpot-mcp-server) (MIT), plus what it lacks:
-
-1. A layout engine: flex layout (Yoga) and text measurement (font metrics), because the backend stores shapes but the browser editor normally computes layout and text size.
-2. A `render_tree` tool: describe a screen as a tree of boards, text, rectangles and icons with flex rules; the server computes positions and writes it in small batches with progress, pause, resume, cancel and scheduling.
-3. The same local UI to watch and control running jobs.
-
-How much of step 1 is needed depends on the spike.
+`node designs/build.mjs` regenerates the JSON screens from WPEssential's tokens. The tree format is documented at the top of `src/render.mjs`. Checks: `node src/render.test.mjs` and `node src/e2e.test.mjs`.

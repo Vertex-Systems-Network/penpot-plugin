@@ -1,0 +1,954 @@
+{
+ "page": "01 · Overview (writer)",
+ "boards": [
+  {
+   "type": "board",
+   "name": "Overview / Desktop 1440",
+   "layout": {
+    "dir": "row",
+    "gap": 0,
+    "align": "stretch"
+   },
+   "children": [
+    {
+     "type": "board",
+     "name": "Sidebar",
+     "layout": {
+      "dir": "column",
+      "gap": 4,
+      "pad": [
+       24,
+       16,
+       24,
+       16
+      ]
+     },
+     "children": [
+      {
+       "type": "text",
+       "text": "WPEssential",
+       "size": 20,
+       "color": "#FFFFFF",
+       "font": "heading",
+       "weight": 700
+      },
+      {
+       "type": "board",
+       "name": "Nav / Overview",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Overview",
+         "size": 14,
+         "color": "#FFFFFF",
+         "weight": 600
+        }
+       ],
+       "fill": "#1F48A6",
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Modules",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Modules",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Post types",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Post types",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Taxonomies",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Taxonomies",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Relations",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Relations",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Custom fields",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Custom fields",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Nav / Settings",
+       "layout": {
+        "dir": "row",
+        "gap": 10,
+        "align": "center",
+        "pad": [
+         9,
+         12,
+         9,
+         12
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Settings",
+         "size": 14,
+         "color": "#C9D3EA",
+         "weight": 500
+        }
+       ],
+       "fill": null,
+       "radius": 8,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      }
+     ],
+     "w": 248,
+     "fill": "#0B1A3D",
+     "sizing": {
+      "w": "fix",
+      "h": "fill"
+     }
+    },
+    {
+     "type": "board",
+     "name": "Main",
+     "layout": {
+      "dir": "column",
+      "gap": 24,
+      "pad": [
+       32,
+       40,
+       40,
+       40
+      ]
+     },
+     "children": [
+      {
+       "type": "board",
+       "name": "Top bar",
+       "layout": {
+        "dir": "row",
+        "gap": 16,
+        "align": "center",
+        "justify": "space-between"
+       },
+       "children": [
+        {
+         "type": "board",
+         "name": "Heading",
+         "layout": {
+          "dir": "column",
+          "gap": 4
+         },
+         "children": [
+          {
+           "type": "text",
+           "text": "Overview",
+           "size": 28,
+           "color": "#0B1A3D",
+           "font": "heading",
+           "weight": 700
+          },
+          {
+           "type": "text",
+           "text": "What is running on this site, and what needs attention.",
+           "size": 14,
+           "color": "#5D6780"
+          }
+         ],
+         "sizing": {
+          "w": "auto",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Actions",
+         "layout": {
+          "dir": "row",
+          "gap": 8,
+          "align": "center"
+         },
+         "children": [
+          {
+           "type": "board",
+           "name": "Button / Browse modules",
+           "layout": {
+            "dir": "row",
+            "gap": 8,
+            "align": "center",
+            "pad": [
+             10,
+             16,
+             10,
+             16
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Browse modules",
+             "size": 14,
+             "color": "#0B1A3D",
+             "weight": 600
+            }
+           ],
+           "fill": "#FFFFFF",
+           "stroke": "#DDE4F0",
+           "radius": 8,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          },
+          {
+           "type": "board",
+           "name": "Button / Create post type",
+           "layout": {
+            "dir": "row",
+            "gap": 8,
+            "align": "center",
+            "pad": [
+             10,
+             16,
+             10,
+             16
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Create post type",
+             "size": 14,
+             "color": "#FFFFFF",
+             "weight": 600
+            }
+           ],
+           "fill": "#EC7D1A",
+           "stroke": null,
+           "radius": 8,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          }
+         ],
+         "sizing": {
+          "w": "auto",
+          "h": "auto"
+         }
+        }
+       ],
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Stats",
+       "layout": {
+        "dir": "row",
+        "gap": 16,
+        "align": "stretch"
+       },
+       "children": [
+        {
+         "type": "board",
+         "name": "Stat / Active modules",
+         "layout": {
+          "dir": "column",
+          "gap": 6,
+          "pad": [
+           20,
+           20,
+           20,
+           20
+          ]
+         },
+         "children": [
+          {
+           "type": "text",
+           "text": "Active modules",
+           "size": 13,
+           "color": "#5D6780",
+           "weight": 500
+          },
+          {
+           "type": "text",
+           "text": "12",
+           "size": 30,
+           "color": "#0B1A3D",
+           "font": "heading",
+           "weight": 700
+          },
+          {
+           "type": "text",
+           "text": "of 31 available",
+           "size": 12,
+           "color": "#5D6780"
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 12,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Stat / Post types",
+         "layout": {
+          "dir": "column",
+          "gap": 6,
+          "pad": [
+           20,
+           20,
+           20,
+           20
+          ]
+         },
+         "children": [
+          {
+           "type": "text",
+           "text": "Post types",
+           "size": 13,
+           "color": "#5D6780",
+           "weight": 500
+          },
+          {
+           "type": "text",
+           "text": "5",
+           "size": 30,
+           "color": "#0B1A3D",
+           "font": "heading",
+           "weight": 700
+          },
+          {
+           "type": "text",
+           "text": "2 with custom fields",
+           "size": 12,
+           "color": "#5D6780"
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 12,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Stat / Field groups",
+         "layout": {
+          "dir": "column",
+          "gap": 6,
+          "pad": [
+           20,
+           20,
+           20,
+           20
+          ]
+         },
+         "children": [
+          {
+           "type": "text",
+           "text": "Field groups",
+           "size": 13,
+           "color": "#5D6780",
+           "weight": 500
+          },
+          {
+           "type": "text",
+           "text": "18",
+           "size": 30,
+           "color": "#0B1A3D",
+           "font": "heading",
+           "weight": 700
+          },
+          {
+           "type": "text",
+           "text": "612 options in use",
+           "size": 12,
+           "color": "#5D6780"
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 12,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Stat / Relations",
+         "layout": {
+          "dir": "column",
+          "gap": 6,
+          "pad": [
+           20,
+           20,
+           20,
+           20
+          ]
+         },
+         "children": [
+          {
+           "type": "text",
+           "text": "Relations",
+           "size": 13,
+           "color": "#5D6780",
+           "weight": 500
+          },
+          {
+           "type": "text",
+           "text": "4",
+           "size": 30,
+           "color": "#0B1A3D",
+           "font": "heading",
+           "weight": 700
+          },
+          {
+           "type": "text",
+           "text": "all in sync",
+           "size": 12,
+           "color": "#5D6780"
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 12,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        }
+       ],
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      },
+      {
+       "type": "board",
+       "name": "Modules card",
+       "layout": {
+        "dir": "column",
+        "gap": 12,
+        "pad": [
+         24,
+         24,
+         24,
+         24
+        ]
+       },
+       "children": [
+        {
+         "type": "text",
+         "text": "Recently changed modules",
+         "size": 18,
+         "color": "#0B1A3D",
+         "font": "heading",
+         "weight": 700
+        },
+        {
+         "type": "board",
+         "name": "Module / Custom post types",
+         "layout": {
+          "dir": "row",
+          "gap": 16,
+          "align": "center",
+          "pad": [
+           16,
+           20,
+           16,
+           20
+          ],
+          "justify": "space-between"
+         },
+         "children": [
+          {
+           "type": "board",
+           "name": "Text",
+           "layout": {
+            "dir": "column",
+            "gap": 4
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Custom post types",
+             "size": 14,
+             "color": "#0B1A3D",
+             "weight": 600
+            },
+            {
+             "type": "text",
+             "text": "Register and manage content types.",
+             "size": 13,
+             "color": "#5D6780"
+            }
+           ],
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          },
+          {
+           "type": "board",
+           "name": "Badge / Active",
+           "layout": {
+            "dir": "row",
+            "gap": 0,
+            "align": "center",
+            "pad": [
+             4,
+             10,
+             4,
+             10
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Active",
+             "size": 12,
+             "color": "#1E9E62",
+             "weight": 600
+            }
+           ],
+           "fill": "#E3F5EC",
+           "radius": 999,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 10,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Module / Taxonomies",
+         "layout": {
+          "dir": "row",
+          "gap": 16,
+          "align": "center",
+          "pad": [
+           16,
+           20,
+           16,
+           20
+          ],
+          "justify": "space-between"
+         },
+         "children": [
+          {
+           "type": "board",
+           "name": "Text",
+           "layout": {
+            "dir": "column",
+            "gap": 4
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Taxonomies",
+             "size": 14,
+             "color": "#0B1A3D",
+             "weight": 600
+            },
+            {
+             "type": "text",
+             "text": "Group content with categories and tags.",
+             "size": 13,
+             "color": "#5D6780"
+            }
+           ],
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          },
+          {
+           "type": "board",
+           "name": "Badge / Active",
+           "layout": {
+            "dir": "row",
+            "gap": 0,
+            "align": "center",
+            "pad": [
+             4,
+             10,
+             4,
+             10
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Active",
+             "size": 12,
+             "color": "#1E9E62",
+             "weight": 600
+            }
+           ],
+           "fill": "#E3F5EC",
+           "radius": 999,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 10,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Module / Relations",
+         "layout": {
+          "dir": "row",
+          "gap": 16,
+          "align": "center",
+          "pad": [
+           16,
+           20,
+           16,
+           20
+          ],
+          "justify": "space-between"
+         },
+         "children": [
+          {
+           "type": "board",
+           "name": "Text",
+           "layout": {
+            "dir": "column",
+            "gap": 4
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Relations",
+             "size": 14,
+             "color": "#0B1A3D",
+             "weight": 600
+            },
+            {
+             "type": "text",
+             "text": "Link posts, terms and users to each other.",
+             "size": 13,
+             "color": "#5D6780"
+            }
+           ],
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          },
+          {
+           "type": "board",
+           "name": "Badge / Active",
+           "layout": {
+            "dir": "row",
+            "gap": 0,
+            "align": "center",
+            "pad": [
+             4,
+             10,
+             4,
+             10
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Active",
+             "size": 12,
+             "color": "#1E9E62",
+             "weight": 600
+            }
+           ],
+           "fill": "#E3F5EC",
+           "radius": 999,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 10,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        },
+        {
+         "type": "board",
+         "name": "Module / Admin columns",
+         "layout": {
+          "dir": "row",
+          "gap": 16,
+          "align": "center",
+          "pad": [
+           16,
+           20,
+           16,
+           20
+          ],
+          "justify": "space-between"
+         },
+         "children": [
+          {
+           "type": "board",
+           "name": "Text",
+           "layout": {
+            "dir": "column",
+            "gap": 4
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Admin columns",
+             "size": 14,
+             "color": "#0B1A3D",
+             "weight": 600
+            },
+            {
+             "type": "text",
+             "text": "Choose which columns list screens show.",
+             "size": 13,
+             "color": "#5D6780"
+            }
+           ],
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          },
+          {
+           "type": "board",
+           "name": "Badge / Off",
+           "layout": {
+            "dir": "row",
+            "gap": 0,
+            "align": "center",
+            "pad": [
+             4,
+             10,
+             4,
+             10
+            ]
+           },
+           "children": [
+            {
+             "type": "text",
+             "text": "Off",
+             "size": 12,
+             "color": "#5D6780",
+             "weight": 600
+            }
+           ],
+           "fill": "#E8EEF8",
+           "radius": 999,
+           "sizing": {
+            "w": "auto",
+            "h": "auto"
+           }
+          }
+         ],
+         "fill": "#FFFFFF",
+         "stroke": "#DDE4F0",
+         "radius": 10,
+         "sizing": {
+          "w": "fill",
+          "h": "auto"
+         }
+        }
+       ],
+       "fill": "#F3F6FC",
+       "radius": 14,
+       "sizing": {
+        "w": "fill",
+        "h": "auto"
+       }
+      }
+     ],
+     "fill": "#FFFFFF",
+     "sizing": {
+      "w": "fill",
+      "h": "auto"
+     }
+    }
+   ],
+   "w": 1440,
+   "h": 900,
+   "fill": "#FFFFFF",
+   "sizing": {
+    "w": "fix",
+    "h": "auto"
+   }
+  }
+ ]
+}
