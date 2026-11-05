@@ -1,5 +1,17 @@
-// Admin Columns editor content, from wpessential config/product/option-contracts/columns.json (41 options, 214 sub-settings).
-// Row: [kind, label, help, values, active]. Kinds come from the Penpot kit (see docs/DESIGN/PENPOT-UI-REFERENCE.md).
+// Admin Columns editor content, from wpessential config/product/option-contracts/columns.json.
+// 41 options as groups; their 214 source sub-settings are shown in 138 rows (lists such as the 21 display
+// formats or 8 list tables are one row of chips, not one row each).
+// Data only: read by the Penpot kit builder (storage.mkGroup in the Penpot file; see
+// docs/DESIGN/PENPOT-UI-REFERENCE.md in the wpessential repo), not by designs/build.mjs.
+//
+// Row: [kind, label, help, values, active]. Kinds and what `values` holds:
+//   text, input, input2 (select), textarea, notice  [shown value or notice text]
+//   on, off                                         [toggle label]
+//   seg2, seg3, seg4                                [segment labels]; active = selected index
+//   seg3lock                                        [3 segment labels, then the lock notice text]; active = index among the 3
+//   chips5                                          [chip labels, any count]; active = array of selected indexes
+//   checks4                                         [checkbox labels, any count]
+//   pair                                            [tier chip, label 1, value 1, label 2, value 2]
 // Group: [title, tier, contract id, rows].
 export const CATS = [
   ['View identity and scope', [
@@ -240,6 +252,7 @@ export const CATS = [
   ]],
 ];
 
+// Board: [name, first category index, last category index], both inclusive.
 export const BOARDS = [
   ['13a · Admin Columns · View and columns', 0, 1],
   ['13b · Admin Columns · Sources and formatting', 2, 2],
