@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Penpot API spike</title>
+<style>
+:root {
+  --ink: #0b1a3d; --text-2: #33405c; --muted: #5d6780; --line: #dde4f0;
+  --surface: #f3f6fc; --card: #fff; --orange: #ec7d1a; --indigo: #1f48a6;
+  --success: #17704a; --success-tint: #e3f4ec; --danger: #c0362c; --danger-tint: #fbe9e7;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r: 10px; --r-lg: 14px;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--surface); color: var(--ink); font: 15px/1.55 var(--font); }
+main { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; }
+.lead { color: var(--muted); margin: 0 0 24px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; }
+h2 { font-size: 17px; margin: 0 0 14px; }
+label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin: 0 0 6px; }
+.field { margin-bottom: 14px; }
+.help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+input[type=text], input[type=password], input[type=url] { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r); font: 14px var(--font); color: var(--ink); background: var(--card); }
+input.mono { font-family: var(--mono); font-size: 13px; }
+button { min-height: 40px; padding: 0 18px; border: 0; border-radius: var(--r); background: var(--orange); color: var(--ink); font: 600 14px var(--font); cursor: pointer; }
+button.secondary { background: var(--indigo); color: #fff; }
+button:hover { filter: brightness(0.95); }
+button:disabled { opacity: 0.6; cursor: progress; }
+:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+pre { margin: 14px 0 0; padding: 12px 14px; background: var(--ink); color: #e8eef8; border-radius: var(--r); font: 12px/1.6 var(--mono); white-space: pre-wrap; min-height: 48px; }
+.status { margin-top: 10px; padding: 10px 12px; border-radius: var(--r); font-size: 13px; font-weight: 600; }
+.status.ok { background: var(--success-tint); color: var(--success); }
+.status.err { background: var(--danger-tint); color: var(--danger); }
+fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+legend { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices label { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; font-weight: 500; cursor: pointer; }
+.choices input { accent-color: var(--orange); }
+.progress { margin-top: 16px; }
+.progress-head { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; margin-bottom: 6px; }
+.progress-label { color: var(--text-2); font-weight: 600; overflow-wrap: anywhere; min-width: 0; }
+.progress-pct { font-family: var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.track { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.bar { height: 100%; background: var(--orange); transform-origin: left; transform: scaleX(0); transition: transform 180ms ease-out; }
+.progress.done .bar { background: var(--success); }
+.progress.failed .bar { background: var(--danger); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.when { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.when input[type=datetime-local] { min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r); font: 13px var(--mono); color: var(--ink); background: var(--card); }
+button.ghost { background: var(--card); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+button.danger { background: var(--danger); color: #fff; }
+.hidden { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Penpot API spike</h1>
+  <p class="lead">Checks whether Penpot can be designed without an open browser tab. It adds one test page, “API spike”, to your file.</p>
+
+  <form class="panel" id="form">
+    <h2>Connection</h2>
+    <div class="field">
+      <label for="token">Access token</label>
+      <input id="token" type="password" class="mono" autocomplete="off" required>
+      <div class="help">Penpot, Settings, Access tokens, Generate new token. It is used for this run only and never saved.</div>
+    </div>
+    <div class="field">
+      <label for="fileId">File id</label>
+      <input id="fileId" type="text" class="mono" value="08b470c5-dda4-812a-8008-e56238f344de" required>
+      <div class="help">The WPEssential file is filled in. Another file’s id is in its URL after “file-id=”.</div>
+    </div>
+    <div class="field">
+      <label for="apiUrl">Penpot address</label>
+      <input id="apiUrl" type="url" class="mono" value="https://design.penpot.app">
+    </div>
+    <div class="field">
+      <label for="at">When</label>
+      <div class="when">
+        <div class="choices"><label><input type="radio" name="mode" value="now" checked> Run now</label><label><input type="radio" name="mode" value="later"> Schedule for later</label></div>
+        <input id="at" type="datetime-local" class="mono hidden" aria-label="Run at">
+      </div>
+      <div class="help">A scheduled run only needs the black server window to stay open; you can close this page and reopen it later to check.</div>
+    </div>
+    <div class="actions">
+      <button id="run" type="submit">Run the test</button>
+      <button id="pause" type="button" class="ghost hidden">Pause</button>
+      <button id="resume" type="button" class="secondary hidden">Resume</button>
+      <button id="reschedule" type="button" class="ghost hidden">Reschedule</button>
+      <button id="cancel" type="button" class="danger hidden">Cancel</button>
+    </div>
+    <div class="progress hidden" id="progress">
+      <div class="progress-head"><span class="progress-label" id="pLabel">Starting</span><span class="progress-pct" id="pPct">0%</span></div>
+      <div class="track" role="progressbar" aria-labelledby="pLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pTrack"><div class="bar" id="pBar"></div></div>
+    </div>
+    <pre id="log" aria-live="polite">Waiting to run.</pre>
+    <div id="status" class="status hidden" role="status"></div>
+  </form>
+
+  <section class="panel hidden" id="questions">
+    <h2>Look at the “API spike” page in Penpot</h2>
+    <fieldset>
+      <legend>Is the text “Text made by the API” visible?</legend>
+      <div class="choices"><label><input type="radio" name="q1" value="yes"> Yes</label><label><input type="radio" name="q1" value="no"> No</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>Where are the text and the two blocks?</legend>
+      <div class="choices"><label><input type="radio" name="q2" value="stacked with gaps"> Stacked with gaps</label><label><input type="radio" name="q2" value="piled in the corner"> Piled in the corner</label></div>
+    </fieldset>
+    <fieldset>
+      <legend>What size is the board?</legend>
+      <div class="choices"><label><input type="radio" name="q3" value="grew to fit"> Grew to fit</label><label><input type="radio" name="q3" value="stayed 400 x 120"> Stayed 400 × 120</label></div>
+    </fieldset>
+    <button id="copy" type="button" class="secondary">Copy result for Claude</button>
+    <div id="copied" class="status ok hidden" role="status">Copied. Paste it into the chat.</div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const show = (id, on) => $(id).classList.toggle('hidden', !on);
+let output = '', polling = null;
+
+function render(j) {
+  const active = ['running', 'paused', 'scheduled'].includes(j.status);
+  output = (j.log || []).join('\n');
+  $('log').textContent = output || (j.status === 'scheduled' ? 'Scheduled for ' + new Date(j.at).toLocaleString() + '.' : 'Waiting to run.');
+  show('progress', j.status !== 'idle');
+  $('progress').className = 'progress' + ({ done: ' done', failed: ' failed', cancelled: ' failed' }[j.status] || '') + (j.status === 'idle' ? ' hidden' : '');
+  $('pBar').style.transform = `scaleX(${(j.pct || 0) / 100})`;
+  $('pPct').textContent = (j.pct || 0) + '%';
+  $('pLabel').textContent = j.label || '';
+  $('pTrack').setAttribute('aria-valuenow', j.pct || 0);
+  $('run').disabled = active;
+  show('pause', j.status === 'running');
+  show('resume', j.status === 'paused');
+  show('reschedule', j.status === 'scheduled');
+  show('cancel', active);
+  const msg = { done: ['ok', 'Page written. Answer the three questions below.'], failed: ['err', 'The test stopped. Copy the log above for Claude.'], cancelled: ['err', 'Cancelled. Nothing more will be written.'], paused: ['ok', 'Paused. Resume to continue from the next step.'] }[j.status];
+  $('status').className = msg ? 'status ' + msg[0] : 'status hidden';
+  if (msg) $('status').textContent = msg[1];
+  show('questions', j.status === 'done');
+  if (active && !polling) polling = setInterval(poll, 500);
+  if (!active && polling) { clearInterval(polling); polling = null; }
+}
+async function poll() { render(await (await fetch('/status')).json()); }
+async function act(name, body) {
+  const res = await fetch('/' + name, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  let j = null;
+  try { j = await res.json(); } catch { /* non-JSON reply, e.g. a plain 403 */ }
+  if (!res.ok || !j || j.error) { $('status').className = 'status err'; $('status').textContent = (j && j.error) || `The local server refused the request (HTTP ${res.status}).`; return; }
+  render(j);
+}
+document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', () => show('at', r.value === 'later' && r.checked)));
+const atValue = () => { const v = $('at').value; return v ? new Date(v).toISOString() : null; };
+$('form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const later = document.querySelector('input[name=mode]:checked').value === 'later';
+  if (later && !atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick a date and time for the scheduled run.'; return; }
+  document.querySelectorAll('#questions input[type=radio]').forEach((r) => (r.checked = false));
+  show('copied', false);
+  act('run', { token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value, at: later ? atValue() : null });
+});
+$('pause').addEventListener('click', () => act('pause'));
+$('resume').addEventListener('click', () => act('resume'));
+$('cancel').addEventListener('click', () => { if (confirm('Cancel this run? Steps already written stay in Penpot.')) act('cancel'); });
+$('reschedule').addEventListener('click', () => {
+  show('at', true); document.querySelector('input[name=mode][value=later]').checked = true;
+  if (!atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick the new date and time, then press Reschedule again.'; $('at').focus(); return; }
+  act('reschedule', { at: atValue() });
+});
+$('copy').addEventListener('click', async () => {
+  const pick = (n) => (document.querySelector(`input[name=${n}]:checked`) || {}).value || 'not answered';
+  const text = `API spike result\n${output.trim()}\n\n1. Text visible: ${pick('q1')}\n2. Layout: ${pick('q2')}\n3. Board size: ${pick('q3')}`;
+  try {
+    await navigator.clipboard.writeText(text);
+    $('copied').textContent = 'Copied. Paste it into the chat.';
+  } catch {
+    prompt('Copy this text, then paste it into the chat:', text);
+    $('copied').textContent = 'Copy the text from the box that opened, then paste it into the chat.';
+  }
+  show('copied', true);
+});
+poll();
+</script>
+</body>
+</html>
