@@ -149,8 +149,9 @@ function render(j) {
 async function poll() { render(await (await fetch('/status')).json()); }
 async function act(name, body) {
   const res = await fetch('/' + name, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
-  const j = await res.json();
-  if (j.error) { $('status').className = 'status err'; $('status').textContent = j.error; return; }
+  let j = null;
+  try { j = await res.json(); } catch { /* non-JSON reply, e.g. a plain 403 */ }
+  if (!res.ok || !j || j.error) { $('status').className = 'status err'; $('status').textContent = (j && j.error) || `The local server refused the request (HTTP ${res.status}).`; return; }
   render(j);
 }
 document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', () => show('at', r.value === 'later' && r.checked)));
@@ -159,6 +160,8 @@ $('form').addEventListener('submit', (e) => {
   e.preventDefault();
   const later = document.querySelector('input[name=mode]:checked').value === 'later';
   if (later && !atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick a date and time for the scheduled run.'; return; }
+  document.querySelectorAll('#questions input[type=radio]').forEach((r) => (r.checked = false));
+  show('copied', false);
   act('run', { token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value, at: later ? atValue() : null });
 });
 $('pause').addEventListener('click', () => act('pause'));
@@ -172,8 +175,14 @@ $('reschedule').addEventListener('click', () => {
 $('copy').addEventListener('click', async () => {
   const pick = (n) => (document.querySelector(`input[name=${n}]:checked`) || {}).value || 'not answered';
   const text = `API spike result\n${output.trim()}\n\n1. Text visible: ${pick('q1')}\n2. Layout: ${pick('q2')}\n3. Board size: ${pick('q3')}`;
-  try { await navigator.clipboard.writeText(text); } catch { prompt('Copy this:', text); }
-  $('copied').classList.remove('hidden');
+  try {
+    await navigator.clipboard.writeText(text);
+    $('copied').textContent = 'Copied. Paste it into the chat.';
+  } catch {
+    prompt('Copy this text, then paste it into the chat:', text);
+    $('copied').textContent = 'Copy the text from the box that opened, then paste it into the chat.';
+  }
+  show('copied', true);
 });
 poll();
 </script>
