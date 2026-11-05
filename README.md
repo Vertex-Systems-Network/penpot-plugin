@@ -20,11 +20,15 @@ How much of step 1 is needed depends on the spike.
 
 ## Spike
 
-```bash
-PENPOT_TOKEN=<access token> PENPOT_FILE_ID=<file id> node spike/check-api.mjs
-```
+Needs [Node.js](https://nodejs.org/en/download) 18 or newer.
 
-Get a token in Penpot under Settings, Access tokens. It creates a page named "API spike" and checks:
+1. Double-click `Start Penpot spike (Windows).bat` (or `Start Penpot spike (Mac).command`). A form opens in your browser.
+2. Paste an access token (Penpot, Settings, Access tokens) and press **Run the test**. A progress bar shows each step and its percentage.
+3. Answer the three questions and press **Copy result for Claude**.
+
+From a terminal instead: `PENPOT_TOKEN=<token> PENPOT_FILE_ID=<file id> node spike/check-api.mjs`.
+
+It creates a page named "API spike" and checks:
 
 1. whether design.penpot.app accepts token API calls or Cloudflare blocks them;
 2. whether API-created text renders;
