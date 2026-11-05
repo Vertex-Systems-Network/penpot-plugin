@@ -42,7 +42,7 @@ function rect(parent, pageId, name, color, x, y) {
 
 // Runs the spike. `log(line)` receives progress lines. Throws on failure.
 // `checkpoint()` is awaited between steps: it can wait (pause) or throw (cancel). A single API write is never interrupted.
-export async function runSpike({ token, fileId, apiUrl = 'https://design.penpot.app' }, log = console.log, checkpoint = async () => {}) {
+export async function runSpike({ token, fileId, apiUrl = 'http://localhost:9001' }, log = console.log, checkpoint = async () => {}) {
   if (!token || !fileId) throw new Error('Access token and file id are both required.');
   const api = apiUrl.replace(/\/$/, '') + '/api/rpc/command/';
 

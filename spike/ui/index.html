@@ -71,12 +71,13 @@ button.danger { background: var(--danger); color: #fff; }
     </div>
     <div class="field">
       <label for="fileId">File id</label>
-      <input id="fileId" type="text" class="mono" value="08b470c5-dda4-812a-8008-e56238f344de" required>
-      <div class="help">The WPEssential file is filled in. Another file’s id is in its URL after “file-id=”.</div>
+      <input id="fileId" type="text" class="mono" placeholder="Paste the file id" required>
+      <div class="help">Open the file in Penpot; its id is in the address bar after “file-id=”.</div>
     </div>
     <div class="field">
       <label for="apiUrl">Penpot address</label>
-      <input id="apiUrl" type="url" class="mono" value="https://design.penpot.app">
+      <input id="apiUrl" type="url" class="mono" value="http://localhost:9001">
+      <div class="help">Your self-hosted Penpot. The public design.penpot.app blocks token access with Cloudflare.</div>
     </div>
     <div class="field">
       <label for="at">When</label>
