@@ -41,7 +41,8 @@ function rect(parent, pageId, name, color, x, y) {
 }
 
 // Runs the spike. `log(line)` receives progress lines. Throws on failure.
-export async function runSpike({ token, fileId, apiUrl = 'https://design.penpot.app' }, log = console.log) {
+// `checkpoint()` is awaited between steps: it can wait (pause) or throw (cancel). A single API write is never interrupted.
+export async function runSpike({ token, fileId, apiUrl = 'https://design.penpot.app' }, log = console.log, checkpoint = async () => {}) {
   if (!token || !fileId) throw new Error('Access token and file id are both required.');
   const api = apiUrl.replace(/\/$/, '') + '/api/rpc/command/';
 
@@ -60,14 +61,14 @@ export async function runSpike({ token, fileId, apiUrl = 'https://design.penpot.
   }
 
   // Progress lines: "@@<percent>|<what is being worked on>". The UI turns them into a progress bar.
-  const progress = (pct, label) => log(`@@${pct}|${label}`);
+  const progress = async (pct, label) => { await checkpoint(); log(`@@${pct}|${label}`); };
 
-  progress(5, 'Checking API access');
+  await progress(5, 'Checking API access');
   log('1. Checking API access');
   const profile = await rpc('get-profile', {});
   log(`   Signed in as ${profile.email || profile.fullname || profile.id}`);
 
-  progress(25, 'Reading the file');
+  await progress(25, 'Reading the file');
   const file = await rpc('get-file', { id: fileId });
   const pageId = id();
   const board = id();
@@ -90,12 +91,12 @@ export async function runSpike({ token, fileId, apiUrl = 'https://design.penpot.
     rect(board, pageId, 'Indigo block', '#1F48A6', 0, 0),
   ];
 
-  changes.forEach((c, i) => progress(35 + Math.round((i / changes.length) * 40), `Preparing: ${c.obj?.name || c.name}`));
+  for (const [i, c] of changes.entries()) await progress(35 + Math.round((i / changes.length) * 40), `Preparing: ${c.obj?.name || c.name}`);
 
-  progress(80, `Writing ${changes.length} items into "${file.name}"`);
+  await progress(80, `Writing ${changes.length} items into "${file.name}"`);
   log(`2. Writing the "API spike" page into "${file.name}"`);
   await rpc('update-file', { id: fileId, sessionId: id(), revn: file.revn, vern: file.vern ?? 0, changes });
-  progress(100, 'Done');
+  log('@@100|Done');
   log('   Done. Open the "API spike" page in Penpot and answer the three questions.');
 }
 

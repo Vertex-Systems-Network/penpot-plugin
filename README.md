@@ -23,7 +23,7 @@ How much of step 1 is needed depends on the spike.
 Needs [Node.js](https://nodejs.org/en/download) 18 or newer.
 
 1. Double-click `Start Penpot spike (Windows).bat` (or `Start Penpot spike (Mac).command`). A form opens in your browser.
-2. Paste an access token (Penpot, Settings, Access tokens) and press **Run the test**. A progress bar shows each step and its percentage.
+2. Paste an access token (Penpot, Settings, Access tokens), choose **Run now** or **Schedule for later**, and press **Run the test**. A progress bar shows each step and its percentage; **Pause**, **Resume**, **Cancel** and **Reschedule** appear while a run is active.
 3. Answer the three questions and press **Copy result for Claude**.
 
 From a terminal instead: `PENPOT_TOKEN=<token> PENPOT_FILE_ID=<file id> node spike/check-api.mjs`.

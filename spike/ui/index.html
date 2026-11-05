@@ -48,7 +48,12 @@ legend { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
 .bar { height: 100%; background: var(--orange); transform-origin: left; transform: scaleX(0); transition: transform 180ms ease-out; }
 .progress.done .bar { background: var(--success); }
 .progress.failed .bar { background: var(--danger); }
-.hidden { display: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.when { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.when input[type=datetime-local] { min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--r); font: 13px var(--mono); color: var(--ink); background: var(--card); }
+button.ghost { background: var(--card); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+button.danger { background: var(--danger); color: #fff; }
+.hidden { display: none !important; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -73,7 +78,21 @@ legend { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
       <label for="apiUrl">Penpot address</label>
       <input id="apiUrl" type="url" class="mono" value="https://design.penpot.app">
     </div>
-    <button id="run" type="submit">Run the test</button>
+    <div class="field">
+      <label for="at">When</label>
+      <div class="when">
+        <div class="choices"><label><input type="radio" name="mode" value="now" checked> Run now</label><label><input type="radio" name="mode" value="later"> Schedule for later</label></div>
+        <input id="at" type="datetime-local" class="mono hidden" aria-label="Run at">
+      </div>
+      <div class="help">A scheduled run only needs the black server window to stay open; you can close this page and reopen it later to check.</div>
+    </div>
+    <div class="actions">
+      <button id="run" type="submit">Run the test</button>
+      <button id="pause" type="button" class="ghost hidden">Pause</button>
+      <button id="resume" type="button" class="secondary hidden">Resume</button>
+      <button id="reschedule" type="button" class="ghost hidden">Reschedule</button>
+      <button id="cancel" type="button" class="danger hidden">Cancel</button>
+    </div>
     <div class="progress hidden" id="progress">
       <div class="progress-head"><span class="progress-label" id="pLabel">Starting</span><span class="progress-pct" id="pPct">0%</span></div>
       <div class="track" role="progressbar" aria-labelledby="pLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pTrack"><div class="bar" id="pBar"></div></div>
@@ -102,38 +121,53 @@ legend { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
-let output = '';
-let lastPct = 0;
-function setProgress(pct, label) {
-  lastPct = pct;
-  $('pBar').style.transform = `scaleX(${pct / 100})`;
-  $('pPct').textContent = pct + '%';
-  $('pLabel').textContent = label;
-  $('pTrack').setAttribute('aria-valuenow', pct);
+const show = (id, on) => $(id).classList.toggle('hidden', !on);
+let output = '', polling = null;
+
+function render(j) {
+  const active = ['running', 'paused', 'scheduled'].includes(j.status);
+  output = (j.log || []).join('\n');
+  $('log').textContent = output || (j.status === 'scheduled' ? 'Scheduled for ' + new Date(j.at).toLocaleString() + '.' : 'Waiting to run.');
+  show('progress', j.status !== 'idle');
+  $('progress').className = 'progress' + ({ done: ' done', failed: ' failed', cancelled: ' failed' }[j.status] || '') + (j.status === 'idle' ? ' hidden' : '');
+  $('pBar').style.transform = `scaleX(${(j.pct || 0) / 100})`;
+  $('pPct').textContent = (j.pct || 0) + '%';
+  $('pLabel').textContent = j.label || '';
+  $('pTrack').setAttribute('aria-valuenow', j.pct || 0);
+  $('run').disabled = active;
+  show('pause', j.status === 'running');
+  show('resume', j.status === 'paused');
+  show('reschedule', j.status === 'scheduled');
+  show('cancel', active);
+  const msg = { done: ['ok', 'Page written. Answer the three questions below.'], failed: ['err', 'The test stopped. Copy the log above for Claude.'], cancelled: ['err', 'Cancelled. Nothing more will be written.'], paused: ['ok', 'Paused. Resume to continue from the next step.'] }[j.status];
+  $('status').className = msg ? 'status ' + msg[0] : 'status hidden';
+  if (msg) $('status').textContent = msg[1];
+  show('questions', j.status === 'done');
+  if (active && !polling) polling = setInterval(poll, 500);
+  if (!active && polling) { clearInterval(polling); polling = null; }
 }
-$('form').addEventListener('submit', async (e) => {
+async function poll() { render(await (await fetch('/status')).json()); }
+async function act(name, body) {
+  const res = await fetch('/' + name, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  const j = await res.json();
+  if (j.error) { $('status').className = 'status err'; $('status').textContent = j.error; return; }
+  render(j);
+}
+document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', () => show('at', r.value === 'later' && r.checked)));
+const atValue = () => { const v = $('at').value; return v ? new Date(v).toISOString() : null; };
+$('form').addEventListener('submit', (e) => {
   e.preventDefault();
-  $('run').disabled = true; $('log').textContent = ''; $('status').className = 'status hidden'; output = '';
-  $('progress').className = 'progress'; setProgress(0, 'Starting');
-  let buf = '';
-  const take = (line) => { const p = line.match(/^@@(\d+)\|(.*)$/); if (p) setProgress(+p[1], p[2]); else if (line) { output += line + '\n'; $('log').textContent = output; } };
-  try {
-    const res = await fetch('/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value }) });
-    const reader = res.body.getReader(); const dec = new TextDecoder();
-    for (;;) {
-      const { value, done } = await reader.read(); if (done) break;
-      buf += dec.decode(value, { stream: true });
-      const lines = buf.split('\n'); buf = lines.pop(); lines.forEach(take);
-    }
-    take(buf);
-  } catch (err) { take('ERROR: ' + err.message); }
-  const failed = /ERROR:/.test(output);
-  $('progress').className = 'progress ' + (failed ? 'failed' : 'done');
-  if (failed) $('pLabel').textContent = `Stopped at ${lastPct}%`;
-  $('status').textContent = failed ? 'The test stopped. Copy the log above for Claude.' : 'Page written. Answer the three questions below.';
-  $('status').className = 'status ' + (failed ? 'err' : 'ok');
-  $('questions').classList.toggle('hidden', failed);
-  $('run').disabled = false;
+  const later = document.querySelector('input[name=mode]:checked').value === 'later';
+  if (later && !atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick a date and time for the scheduled run.'; return; }
+  act('run', { token: $('token').value, fileId: $('fileId').value, apiUrl: $('apiUrl').value, at: later ? atValue() : null });
+});
+$('pause').addEventListener('click', () => act('pause'));
+$('resume').addEventListener('click', () => act('resume'));
+$('cancel').addEventListener('click', () => { if (confirm('Cancel this run? Steps already written stay in Penpot.')) act('cancel'); });
+$('reschedule').addEventListener('click', () => {
+  show('at', true); document.querySelector('input[name=mode][value=later]').checked = true;
+  if (!atValue()) { $('status').className = 'status err'; $('status').textContent = 'Pick the new date and time, then press Reschedule again.'; $('at').focus(); return; }
+  act('reschedule', { at: atValue() });
 });
 $('copy').addEventListener('click', async () => {
   const pick = (n) => (document.querySelector(`input[name=${n}]:checked`) || {}).value || 'not answered';
@@ -141,6 +175,7 @@ $('copy').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(text); } catch { prompt('Copy this:', text); }
   $('copied').classList.remove('hidden');
 });
+poll();
 </script>
 </body>
 </html>
