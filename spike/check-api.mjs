@@ -22,8 +22,8 @@ const geom = (x, y, w, h) => ({
 
 const fill = (c) => [{ fillColor: c, fillOpacity: 1 }];
 
-function text(parent, pageId, chars, x, y) {
-  const t = { text: chars, fills: fill('#0B1A3D'), fontId: 'gfont-plus-jakarta-sans', fontFamily: 'Plus Jakarta Sans', fontSize: '16', fontWeight: '600', fontStyle: 'normal', lineHeight: '1.4', letterSpacing: '0' };
+function text(parent, pageId, chars, x, y, font = { fontId: 'gfont-plus-jakarta-sans', fontFamily: 'Plus Jakarta Sans' }) {
+  const t = { text: chars, fills: fill('#0B1A3D'), ...font, fontSize: '16', fontWeight: '600', fontStyle: 'normal', lineHeight: '1.4', letterSpacing: '0' };
   const sid = id();
   return {
     type: 'add-obj', id: sid, pageId, parentId: parent, frameId: parent,
@@ -74,7 +74,7 @@ export async function runSpike({ token, fileId, apiUrl = 'http://localhost:9001'
   const board = id();
   // Children are placed at 0,0 on purpose: if the editor applies flex layout they will appear stacked.
   const changes = [
-    { type: 'add-page', id: pageId, name: 'API spike' },
+    { type: 'add-page', id: pageId, name: 'API spike 2' },
     {
       type: 'add-obj', id: board, pageId, parentId: ROOT, frameId: ROOT,
       obj: {
@@ -83,21 +83,25 @@ export async function runSpike({ token, fileId, apiUrl = 'http://localhost:9001'
         layout: 'flex', layoutFlexDir: 'column', layoutGap: { rowGap: 12, columnGap: 12 },
         layoutPadding: { p1: 24, p2: 24, p3: 24, p4: 24 }, layoutPaddingType: 'multiple',
         layoutAlignItems: 'start', layoutJustifyContent: 'start', layoutWrapType: 'nowrap',
+        // Fit content and no clipping, so nothing can hide outside the board.
+        layoutItemHSizing: 'fix', layoutItemVSizing: 'auto', showContent: true,
         ...geom(0, 0, 400, 120),
       },
     },
-    text(board, pageId, 'Text made by the API', 0, 0),
-    rect(board, pageId, 'Orange block', '#EC7D1A', 0, 0),
+    // Sent in reverse: the first spike showed the editor stacks flex children last-added first.
     rect(board, pageId, 'Indigo block', '#1F48A6', 0, 0),
+    rect(board, pageId, 'Orange block', '#EC7D1A', 0, 0),
+    text(board, pageId, 'Default font text', 0, 0, { fontId: 'sourcesanspro', fontFamily: 'sourcesanspro' }),
+    text(board, pageId, 'Text made by the API', 0, 0),
   ];
 
   for (const [i, c] of changes.entries()) await progress(35 + Math.round((i / changes.length) * 40), `Preparing: ${c.obj?.name || c.name}`);
 
   await progress(80, `Writing ${changes.length} items into "${file.name}"`);
-  log(`2. Writing the "API spike" page into "${file.name}"`);
+  log(`2. Writing the "API spike 2" page into "${file.name}"`);
   await rpc('update-file', { id: fileId, sessionId: id(), revn: file.revn, vern: file.vern ?? 0, changes });
   log('@@100|Done');
-  log('   Done. Open the "API spike" page in Penpot and answer the three questions.');
+  log('   Done. Open the "API spike 2" page in Penpot and answer the three questions.');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

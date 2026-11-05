@@ -60,7 +60,7 @@ button.danger { background: var(--danger); color: #fff; }
 <body>
 <main>
   <h1>Penpot API spike</h1>
-  <p class="lead">Checks whether Penpot can be designed without an open browser tab. It adds one test page, “API spike”, to your file.</p>
+  <p class="lead">Checks whether Penpot can be designed without an open browser tab. It adds one test page, “API spike 2”, to your file.</p>
 
   <form class="panel" id="form">
     <h2>Connection</h2>
@@ -103,18 +103,18 @@ button.danger { background: var(--danger); color: #fff; }
   </form>
 
   <section class="panel hidden" id="questions">
-    <h2>Look at the “API spike” page in Penpot</h2>
+    <h2>Look at the “API spike 2” page in Penpot</h2>
     <fieldset>
-      <legend>Is the text “Text made by the API” visible?</legend>
-      <div class="choices"><label><input type="radio" name="q1" value="yes"> Yes</label><label><input type="radio" name="q1" value="no"> No</label></div>
+      <legend>Which texts are visible?</legend>
+      <div class="choices"><label><input type="radio" name="q1" value="both"> Both</label><label><input type="radio" name="q1" value="only Default font text"> Only “Default font text”</label><label><input type="radio" name="q1" value="only Text made by the API"> Only “Text made by the API”</label><label><input type="radio" name="q1" value="none"> None</label></div>
     </fieldset>
     <fieldset>
-      <legend>Where are the text and the two blocks?</legend>
-      <div class="choices"><label><input type="radio" name="q2" value="stacked with gaps"> Stacked with gaps</label><label><input type="radio" name="q2" value="piled in the corner"> Piled in the corner</label></div>
+      <legend>What is the order from top to bottom?</legend>
+      <div class="choices"><label><input type="radio" name="q2" value="texts first, then orange, then indigo"> Texts, orange, indigo</label><label><input type="radio" name="q2" value="indigo, orange, then texts"> Indigo, orange, texts</label><label><input type="radio" name="q2" value="something else"> Something else</label></div>
     </fieldset>
     <fieldset>
       <legend>What size is the board?</legend>
-      <div class="choices"><label><input type="radio" name="q3" value="grew to fit"> Grew to fit</label><label><input type="radio" name="q3" value="stayed 400 x 120"> Stayed 400 × 120</label></div>
+      <div class="choices"><label><input type="radio" name="q3" value="grew to fit"> Grew to fit</label><label><input type="radio" name="q3" value="stayed 120 tall"> Stayed 120 tall</label></div>
     </fieldset>
     <button id="copy" type="button" class="secondary">Copy result for Claude</button>
     <div id="copied" class="status ok hidden" role="status">Copied. Paste it into the chat.</div>
